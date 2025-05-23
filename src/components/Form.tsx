@@ -1,9 +1,13 @@
 import {useState} from "react";
 const Form = ()=>{
-    const [isRegister, setRegister] = useState(true);
+    const [isRegister, setisRegister] = useState(true);
+
+    const atraparFormulario =(e:any)=>{
+        e.preventDefault();
+    }
 
     return(
-        <form>
+        <form onSubmit={atraparFormulario}>
             <h1>{isRegister?"Registrar Usuario":"Iniciar Sesion"}</h1>
             <div>
                 <label htmlFor="email">Email</label>
@@ -20,7 +24,9 @@ const Form = ()=>{
                 </button>
             </div>
             <p>{isRegister?"Ya":"Aun no "}
-                <span>{isRegister?"Inicia Sesion aqui":"Registrate aqui"}</span></p>
+                <span
+                onClick={()=>setisRegister(!isRegister)}
+                >{isRegister?"Inicia Sesion aqui":"Registrate aqui"}</span></p>
         </form>
     )
 }
