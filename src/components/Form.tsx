@@ -1,25 +1,25 @@
 import {useState} from "react";
 import register from "../events/register";
 import login from "../events/login";
-import toast from "react-hot-toast/headless";
-
+import toast from "react-hot-toast";
 const Form = ()=>{
-    const [isRegister, setisRegister] = useState(true);
-    const [email, setemail] = useState("");
-    const [password, setpassword] = useState("");
+    const [isRegister, setIsRegister] = useState(true);
+
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
 
     const atraparFormulario = async (e:any)=>{
         e.preventDefault();
-       try {
-        let response = isRegister? await register(email,password): await login(email,password);
+        try{
+        let response = isRegister? await register(email,password):await login(email,password);
         const data = await response.json();
         const token = data.token;
-        toast.success("Inicio exitoso");
-       } catch (error:any) {
-            toast.error(error.message || "Error al acceder al sistema");
-       }
-            
-}
+        localStorage.setItem("token",token);
+        toast.success("Ingresò al sistema corectamente");
+        }catch(error:any){
+            toast.error(error.message || "Error al ingresar al sistema ");
+        }
+    }
 
     return(
         <form onSubmit={atraparFormulario}>
@@ -27,21 +27,21 @@ const Form = ()=>{
             <div>
                 <label htmlFor="email">Email</label>
                 <input type="text" name="email" id="email" required 
-                placeholder="user@example.com"></input>
+                placeholder="user@example.com" value={email} onChange={(e) => setEmail(e.target.value)}></input>
             </div>
             <div>
                 <label htmlFor="password">Password</label>
-                <input type="password" name="password" id="password" required></input>
+                <input type="password" name="password" id="password" required value={password} onChange={(e) => setPassword(e.target.value)}></input>
             </div>
             <div>
                 <button type="submit">
                     {isRegister?"Registrar":"iniciar Sesion"}
                 </button>
             </div>
-            <p>{isRegister?"Ya":"Aun no "}
-                <span
-                onClick={()=>setisRegister(!isRegister)}
-                >{isRegister?"Inicia Sesion aqui":"Registrate aqui"}</span></p>
+            <p>{isRegister?"Ya tienes una cuenta. ":"Aun no tienes cuenta. "}
+                <span 
+                onClick={()=>setIsRegister(!isRegister)}
+                    >{isRegister?" Inicia Sesion aqui":"Registrate aqui"}</span></p>
         </form>
     )
 }
