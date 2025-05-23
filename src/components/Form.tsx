@@ -1,10 +1,25 @@
 import {useState} from "react";
+import register from "../events/register";
+import login from "../events/login";
+import toast from "react-hot-toast/headless";
+
 const Form = ()=>{
     const [isRegister, setisRegister] = useState(true);
+    const [email, setemail] = useState("");
+    const [password, setpassword] = useState("");
 
-    const atraparFormulario =(e:any)=>{
+    const atraparFormulario = async (e:any)=>{
         e.preventDefault();
-    }
+       try {
+        let response = isRegister? await register(email,password): await login(email,password);
+        const data = await response.json();
+        const token = data.token;
+        toast.success("Inicio exitoso");
+       } catch (error:any) {
+            toast.error(error.message || "Error al acceder al sistema");
+       }
+            
+}
 
     return(
         <form onSubmit={atraparFormulario}>
